@@ -53,6 +53,11 @@
                             <artifactId>lombok</artifactId>
                         </exclude>
                     </excludes>
+<!--                    <environmentVariables>-->
+<!--                        <SPRING_DATASOURCE_URL>jdbc:postgresql://localhost:5432/ewm-service</SPRING_DATASOURCE_URL>-->
+<!--                        <SPRING_DATASOURCE_USERNAME>postgres</SPRING_DATASOURCE_USERNAME>-->
+<!--                        <SPRING_DATASOURCE_PASSWORD>root</SPRING_DATASOURCE_PASSWORD>-->
+<!--                    </environmentVariables>-->
                 </configuration>
             </plugin>
         </plugins>
