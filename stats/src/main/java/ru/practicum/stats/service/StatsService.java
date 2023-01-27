@@ -1,6 +1,5 @@
 package ru.practicum.stats.service;
 
-import org.springframework.http.ResponseEntity;
 import ru.practicum.stats.dto.EndpointHitDto;
 import ru.practicum.stats.model.ViewStats;
 

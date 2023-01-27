@@ -18,14 +18,14 @@ public interface StatsRepository extends JpaRepository<EndpointHit, Long> {
             "where h.timestamp > :start " +
             "  and h.timestamp < :end " +
             "group by h.app, h.uri order by count(h.id) DESC")
-    List<ViewStats> getViewStats (@Param("start") LocalDateTime start, @Param("end") LocalDateTime end);
+    List<ViewStats> getViewStats(@Param("start") LocalDateTime start, @Param("end") LocalDateTime end);
 
     @Query("select new ru.practicum.stats.model.ViewStats( h.app, h.uri, count(distinct h.ip)) " +
             "from EndpointHit h " +
             "where h.timestamp > :start " +
             "  and h.timestamp < :end " +
             "group by h.app, h.uri order by count(h.id) DESC")
-    List<ViewStats> getUniqueViewStats (@Param("start") LocalDateTime start, @Param("end") LocalDateTime end);
+    List<ViewStats> getUniqueViewStats(@Param("start") LocalDateTime start, @Param("end") LocalDateTime end);
 
     @Query("select new ru.practicum.stats.model.ViewStats( h.app, h.uri, count(h.id)) " +
             "from EndpointHit h " +
@@ -33,9 +33,9 @@ public interface StatsRepository extends JpaRepository<EndpointHit, Long> {
             "  and h.timestamp < :end " +
             "  and h.uri in :uris " +
             "group by h.app, h.uri order by count(h.id) DESC")
-    List<ViewStats> getViewStatsByUris (@Param("start") LocalDateTime start,
-                                        @Param("end") LocalDateTime end,
-                                        @Param("uris") String[] uris);
+    List<ViewStats> getViewStatsByUris(@Param("start") LocalDateTime start,
+                                       @Param("end") LocalDateTime end,
+                                       @Param("uris") String[] uris);
 
     @Query("select new ru.practicum.stats.model.ViewStats( h.app, h.uri, count(distinct h.ip)) " +
             "from EndpointHit h " +
@@ -43,10 +43,9 @@ public interface StatsRepository extends JpaRepository<EndpointHit, Long> {
             "  and h.timestamp < :end " +
             "  and h.uri in :uris " +
             "group by h.app, h.uri order by count(h.id) DESC")
-    List<ViewStats> getUniqueViewStatsByUris (@Param("start") LocalDateTime start,
-                                              @Param("end") LocalDateTime end,
-                                              @Param("uris") String[] uris);
-
+    List<ViewStats> getUniqueViewStatsByUris(@Param("start") LocalDateTime start,
+                                             @Param("end") LocalDateTime end,
+                                             @Param("uris") String[] uris);
 
 
 }
