@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.stats.dto.EndpointHitDto;
-import ru.practicum.stats.model.ViewStats;
+import ru.practicum.stats.dto.ViewStatsDto;
 import ru.practicum.stats.service.StatsService;
 
 import javax.validation.Valid;
@@ -25,7 +25,7 @@ public class StatsController {
     private final StatsService statsService;
 
     @GetMapping("/stats")
-    public ResponseEntity<List<ViewStats>> getViewStats(
+    public ResponseEntity<List<ViewStatsDto>> getViewStats(
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime start,
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime end,
             @RequestParam(required = false) String[] uris,

@@ -1,4 +1,4 @@
-package ru.practicum.stats.model;
+package ru.practicum.stats.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,7 +9,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class ViewStats {
+public class ViewStatsDto {
 
     private String app;
     private String uri;

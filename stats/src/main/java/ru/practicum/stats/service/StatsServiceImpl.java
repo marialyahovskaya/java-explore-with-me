@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import ru.practicum.stats.StatsRepository;
 import ru.practicum.stats.dto.EndpointHitDto;
 import ru.practicum.stats.mapper.EndpointHitMapper;
-import ru.practicum.stats.model.ViewStats;
+import ru.practicum.stats.dto.ViewStatsDto;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -22,7 +22,7 @@ public class StatsServiceImpl implements StatsService {
     }
 
     @Override
-    public List<ViewStats> getViewStats(LocalDateTime start, LocalDateTime end, String[] uris, Boolean unique) {
+    public List<ViewStatsDto> getViewStats(LocalDateTime start, LocalDateTime end, String[] uris, Boolean unique) {
         if (unique) {
             if (uris != null && uris.length > 0) {
                 return statsRepository.getUniqueViewStatsByUris(start, end, uris);
