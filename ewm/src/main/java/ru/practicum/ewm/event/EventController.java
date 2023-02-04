@@ -14,6 +14,8 @@ import ru.practicum.ewm.event.service.EventService;
 
 import javax.validation.Valid;
 import javax.validation.ValidationException;
+import java.time.LocalDateTime;
+import java.util.Collection;
 
 @Slf4j
 @RestController
@@ -29,5 +31,17 @@ public class EventController {
     public ResponseEntity<EventFullDto> createEvent(@PathVariable Long userId,
                                                        @RequestBody @Valid NewEventDto eventDto) throws ValidationException {
         return new ResponseEntity<>(eventService.addEvent(userId, eventDto), HttpStatus.CREATED);
+    }
+
+    @GetMapping("/admin/events")
+    public ResponseEntity<Collection<EventFullDto>> findEvents(
+            @RequestParam(required = false) Long[] users,
+            @RequestParam(required = false) String[] states,
+            @RequestParam(required = false) Long[] categories,
+            @RequestParam(required = false) LocalDateTime rangeStart,
+            @RequestParam(required = false) LocalDateTime rangeEnd,
+            @RequestParam(required = false, defaultValue = "0") Integer from,
+            @RequestParam(required = false, defaultValue = "10") Integer size) {
+        return new ResponseEntity<>(eventService.findEvents(users, states, categories, rangeStart, rangeEnd, from, size), HttpStatus.OK);
     }
 }

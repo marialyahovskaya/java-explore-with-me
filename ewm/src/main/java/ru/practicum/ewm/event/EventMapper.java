@@ -8,6 +8,11 @@ import ru.practicum.ewm.event.dto.Location;
 import ru.practicum.ewm.event.dto.NewEventDto;
 import ru.practicum.ewm.user.User;
 import ru.practicum.ewm.user.UserMapper;
+import ru.practicum.ewm.user.dto.UserDto;
+
+import java.util.Collection;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 public class EventMapper {
 
@@ -48,6 +53,12 @@ public class EventMapper {
         eventDto.setViews(event.getViews());
 
         return eventDto;
+    }
+
+    public static Collection<EventFullDto> toEventFullDto(Iterable<Event> events) {
+        return StreamSupport.stream(events.spliterator(), false)
+                .map(EventMapper::toEventFullDto)
+                .collect(Collectors.toUnmodifiableList());
     }
 
 }
