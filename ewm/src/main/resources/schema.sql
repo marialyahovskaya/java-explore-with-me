@@ -1,7 +1,38 @@
-DROP TABLE if EXISTS users;
+DROP TABLE if EXISTS users, categories, events, requests;
 CREATE TABLE if NOT EXISTS public.users
 (
     id int8 GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     name varchar NOT NULL,
     email varchar NOT NULL UNIQUE
+);
+CREATE TABLE if NOT EXISTS public.categories
+(
+    id int8 GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    name varchar NOT NULL
+);
+CREATE TABLE if NOT EXISTS public.events
+(
+    id int8 GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    annotation varchar NOT NULL,
+    category_id int8 NOT NULL,
+    created_on timestamp without time zone NOT NULL,
+    description varchar,
+    event_date timestamp without time zone NOT NULL,
+    initiator_id int8 NOT NULL,
+    location point NOT NULL,
+    paid boolean NOT NULL,
+    participant_limit int8,
+    published_on timestamp without time zone,
+    request_moderation boolean,
+    state varchar NOT NULL,
+    title varchar NOT NULL,
+    views int8 NOT NULL
+);
+CREATE TABLE if NOT EXISTS public.requests
+(
+    id int8 GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    event_id int8 NOT NULL,
+    created timestamp without time zone NOT NULL,
+    requester_id int8 NOT NULL,
+    status varchar NOT NULL
 );
