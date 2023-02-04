@@ -4,6 +4,9 @@ import ru.practicum.ewm.user.dto.NewUserRequest;
 import ru.practicum.ewm.user.dto.UserDto;
 import ru.practicum.ewm.user.dto.UserShortDto;
 
+import java.util.Collection;
+import java.util.stream.Collectors;
+
 
 public class UserMapper {
 
@@ -29,5 +32,11 @@ public class UserMapper {
         userDto.setId(user.getId());
         userDto.setName(user.getName());
         return userDto;
+    }
+
+    public static Collection<UserDto> toUserDto(Collection<User> users) {
+        return users.stream()
+                .map(UserMapper::toUserDto)
+                .collect(Collectors.toUnmodifiableList());
     }
 }
