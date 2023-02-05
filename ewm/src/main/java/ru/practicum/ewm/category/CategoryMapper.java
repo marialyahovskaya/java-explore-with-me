@@ -3,6 +3,9 @@ package ru.practicum.ewm.category;
 import ru.practicum.ewm.category.dto.CategoryDto;
 import ru.practicum.ewm.category.dto.NewCategoryDto;
 
+import java.util.Collection;
+import java.util.stream.Collectors;
+
 public class CategoryMapper {
 
     public static Category toCategory(NewCategoryDto categoryDto) {
@@ -26,5 +29,12 @@ public class CategoryMapper {
         categoryDto.setName(category.getName());
 
         return categoryDto;
+    }
+
+    public static Collection<CategoryDto> toCategoryDto(Collection<Category> categories) {
+        return categories.stream()
+                .map(CategoryMapper::toCategoryDto)
+                .collect(Collectors.toUnmodifiableList());
+
     }
 }

@@ -1,7 +1,9 @@
 package ru.practicum.ewm.request;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
+import ru.practicum.ewm.event.Event;
 import ru.practicum.ewm.request.dto.ParticipationRequestStatus;
 
 import javax.persistence.*;
@@ -24,8 +26,8 @@ public class ParticipationRequest {
     @CreationTimestamp
     private LocalDateTime created;
 
-    @Column(nullable = false)
-    private Long eventId;
+//    @Column(nullable = false, name = "event_id")
+//    private Long eventId;
 
     @Column(nullable = false)
     private Long requesterId;
@@ -33,10 +35,18 @@ public class ParticipationRequest {
     @Column(nullable = false)
     private ParticipationRequestStatus status;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "event_id")
+    @JsonBackReference
+    private Event event;
+
     public static ParticipationRequest of(Long userId, Long eventId){
         ParticipationRequest request = new ParticipationRequest();
         request.setRequesterId(userId);
-        request.setEventId(eventId);
+        Event event = new Event();
+        event.setId(eventId);
+        request.setEvent(event);
+//        request.setEventId(eventId);
         request.setStatus(ParticipationRequestStatus.PENDING);
 
         return request;

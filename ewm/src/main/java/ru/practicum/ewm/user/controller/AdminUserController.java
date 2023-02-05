@@ -1,4 +1,4 @@
-package ru.practicum.ewm.user;
+package ru.practicum.ewm.user.controller;
 
 
 import lombok.RequiredArgsConstructor;
@@ -16,7 +16,7 @@ import java.util.Collection;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(path = "/admin/users")
-public class UserController {
+public class AdminUserController {
 
     private final UserService userService;
 

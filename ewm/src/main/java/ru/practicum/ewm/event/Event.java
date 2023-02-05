@@ -1,14 +1,19 @@
 package ru.practicum.ewm.event;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.geo.Point;
 import ru.practicum.ewm.category.Category;
-import ru.practicum.ewm.event.dto.EventState;
+import ru.practicum.ewm.event.enums.EventState;
+import ru.practicum.ewm.request.ParticipationRequest;
+import ru.practicum.ewm.request.dto.ParticipationRequestStatus;
 import ru.practicum.ewm.user.User;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Collection;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "events", schema = "public")
@@ -30,7 +35,10 @@ public class Event {
     @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
-   // private Long confirmedRequests;
+
+    @OneToMany(mappedBy = "event", fetch = FetchType.LAZY)
+    @JsonManagedReference
+    private Collection<ParticipationRequest> requests;
 
     @CreationTimestamp
     private LocalDateTime createdOn;
@@ -56,11 +64,18 @@ public class Event {
 
     private Boolean requestModeration;
 
+    @Enumerated(EnumType.STRING)
     private EventState state;
 
     @Column(nullable = false)
     private String title;
 
     private Long views;
+
+    public Collection<ParticipationRequest> getConfirmedRequests(){
+        return this.getRequests().stream()
+                .filter((request)-> request.getStatus() == ParticipationRequestStatus.CONFIRMED)
+                .collect(Collectors.toUnmodifiableList());
+    }
 
 }

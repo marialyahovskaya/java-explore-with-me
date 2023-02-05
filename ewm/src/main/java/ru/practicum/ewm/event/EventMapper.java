@@ -4,11 +4,11 @@ import org.springframework.data.geo.Point;
 import ru.practicum.ewm.category.Category;
 import ru.practicum.ewm.category.CategoryMapper;
 import ru.practicum.ewm.event.dto.EventFullDto;
+import ru.practicum.ewm.event.dto.EventShortDto;
 import ru.practicum.ewm.event.dto.Location;
 import ru.practicum.ewm.event.dto.NewEventDto;
 import ru.practicum.ewm.user.User;
 import ru.practicum.ewm.user.UserMapper;
-import ru.practicum.ewm.user.dto.UserDto;
 
 import java.util.Collection;
 import java.util.stream.Collectors;
@@ -32,13 +32,13 @@ public class EventMapper {
         return event;
     }
 
-    public static EventFullDto toEventFullDto(Event event){
+    public static EventFullDto toEventFullDto(Event event) {
 
         EventFullDto eventDto = new EventFullDto();
         eventDto.setId(event.getId());
         eventDto.setAnnotation(event.getAnnotation());
         eventDto.setCategory(CategoryMapper.toCategoryDto(event.getCategory()));
-        //eventDto.setConfirmedRequests(event.getConfirmedRequests());
+        eventDto.setConfirmedRequests(Long.valueOf(event.getConfirmedRequests().size()));
         eventDto.setCreatedOn(event.getCreatedOn());
         eventDto.setDescription(event.getDescription());
         eventDto.setEventDate(event.getEventDate());
@@ -55,10 +55,32 @@ public class EventMapper {
         return eventDto;
     }
 
+    public static EventShortDto toEventShortDto(Event event) {
+
+        EventShortDto eventDto = new EventShortDto();
+        eventDto.setId(event.getId());
+        eventDto.setAnnotation(event.getAnnotation());
+        eventDto.setCategory(CategoryMapper.toCategoryDto(event.getCategory()));
+        eventDto.setConfirmedRequests(Long.valueOf(event.getConfirmedRequests().size()));
+        eventDto.setEventDate(event.getEventDate());
+        eventDto.setInitiator(UserMapper.toUserShortDto(event.getInitiator()));
+        eventDto.setPaid(event.getPaid());
+        eventDto.setTitle(event.getTitle());
+        eventDto.setViews(event.getViews());
+
+        return eventDto;
+    }
+
     public static Collection<EventFullDto> toEventFullDto(Iterable<Event> events) {
         return StreamSupport.stream(events.spliterator(), false)
                 .map(EventMapper::toEventFullDto)
                 .collect(Collectors.toUnmodifiableList());
     }
 
+    public static Collection<EventShortDto> toEventShortDto(Collection<Event> events) {
+        return events.stream()
+                .map(EventMapper::toEventShortDto)
+                .collect(Collectors.toUnmodifiableList());
+
+    }
 }
