@@ -1,11 +1,11 @@
 package ru.practicum.ewm.compilation;
 
-import ru.practicum.ewm.category.Category;
-import ru.practicum.ewm.category.CategoryMapper;
-import ru.practicum.ewm.category.dto.CategoryDto;
 import ru.practicum.ewm.compilation.dto.CompilationDto;
+import ru.practicum.ewm.compilation.dto.NewCompilationDto;
+import ru.practicum.ewm.event.Event;
 import ru.practicum.ewm.event.EventMapper;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
@@ -26,5 +26,18 @@ public class CompilationMapper {
                 .map(CompilationMapper::toCompilationDto)
                 .collect(Collectors.toUnmodifiableList());
 
+    }
+
+    public static Compilation toCompilation(NewCompilationDto compilationDto) {
+        Compilation compilation = new Compilation();
+        compilation.setTitle(compilationDto.getTitle());
+        compilation.setPinned(compilationDto.getPinned());
+        compilation.setEvents(Arrays.stream(compilationDto.getEvents()).map((id)-> {
+            Event event = new Event();
+            event.setId(id);
+            return event;
+        }).collect(Collectors.toUnmodifiableList()));
+
+        return compilation;
     }
 }

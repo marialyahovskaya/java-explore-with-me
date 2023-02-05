@@ -4,9 +4,15 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ru.practicum.ewm.PaginationHelper;
+import ru.practicum.ewm.category.Category;
+import ru.practicum.ewm.compilation.Compilation;
 import ru.practicum.ewm.compilation.CompilationMapper;
 import ru.practicum.ewm.compilation.CompilationRepository;
 import ru.practicum.ewm.compilation.dto.CompilationDto;
+import ru.practicum.ewm.compilation.dto.NewCompilationDto;
+import ru.practicum.ewm.event.Event;
+import ru.practicum.ewm.event.EventMapper;
+import ru.practicum.ewm.user.User;
 
 import java.util.Collection;
 
@@ -25,5 +31,12 @@ public class CompilationServiceImpl implements CompilationService {
         } else {
             return CompilationMapper.toCompilationDto(compilationRepository.findByPinned(pinned, pageable));
         }
+    }
+
+    @Override
+    public CompilationDto addCompilation(NewCompilationDto compilationDto) {
+        Compilation compilation = CompilationMapper.toCompilation(compilationDto);
+        return CompilationMapper.toCompilationDto(compilationRepository.save(compilation));
+
     }
 }
