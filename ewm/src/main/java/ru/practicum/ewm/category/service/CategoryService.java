@@ -10,4 +10,7 @@ public interface CategoryService {
     CategoryDto addCategory(final NewCategoryDto category);
 
     Collection<CategoryDto> findCategories(Integer from, Integer size);
+
+    CategoryDto patchCategory(Long id, NewCategoryDto categoryDto);
+
 }

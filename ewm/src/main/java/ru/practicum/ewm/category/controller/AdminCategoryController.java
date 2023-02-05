@@ -3,10 +3,7 @@ package ru.practicum.ewm.category.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.category.dto.CategoryDto;
 import ru.practicum.ewm.category.dto.NewCategoryDto;
 import ru.practicum.ewm.category.service.CategoryService;
@@ -25,5 +22,11 @@ public class AdminCategoryController {
     @PostMapping
     public ResponseEntity<CategoryDto> createCategory(@RequestBody @Valid NewCategoryDto categoryDto) throws ValidationException {
         return new ResponseEntity<>(categoryService.addCategory(categoryDto), HttpStatus.CREATED);
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<CategoryDto> patchCategory(@PathVariable Long id,
+                                                     @RequestBody @Valid NewCategoryDto categoryDto) throws ValidationException {
+        return new ResponseEntity<>(categoryService.patchCategory(id, categoryDto), HttpStatus.OK);
     }
 }

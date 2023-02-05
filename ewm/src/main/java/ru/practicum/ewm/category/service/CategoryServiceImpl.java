@@ -34,4 +34,16 @@ public class CategoryServiceImpl implements CategoryService {
 
         return CategoryMapper.toCategoryDto(categoryRepository.findAll(pageable).getContent());
     }
+
+    @Override
+    public CategoryDto patchCategory(Long id, NewCategoryDto categoryDto) {
+        Category categoryToUpdate = categoryRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Category not found"));
+
+        categoryToUpdate.setName(categoryDto.getName());
+
+        Category updatedCategory = categoryRepository.save(categoryToUpdate);
+        return CategoryMapper.toCategoryDto(updatedCategory);
+
+    }
 }
