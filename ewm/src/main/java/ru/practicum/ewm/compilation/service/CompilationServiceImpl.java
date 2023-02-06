@@ -12,9 +12,12 @@ import ru.practicum.ewm.compilation.dto.CompilationDto;
 import ru.practicum.ewm.compilation.dto.NewCompilationDto;
 import ru.practicum.ewm.event.Event;
 import ru.practicum.ewm.event.EventMapper;
+import ru.practicum.ewm.event.service.EventService;
 import ru.practicum.ewm.user.User;
+import ru.practicum.stats.client.StatsClient;
 
-import java.util.Collection;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -22,21 +25,34 @@ public class CompilationServiceImpl implements CompilationService {
 
     public final CompilationRepository compilationRepository;
 
+    public final EventService eventService;
 
     @Override
     public Collection<CompilationDto> findCategories(Boolean pinned, Integer from, Integer size) {
         Pageable pageable = PaginationHelper.makePageable(from, size);
+        Collection<Compilation> compilations = new ArrayList<>();
+
         if (pinned == null) {
-            return CompilationMapper.toCompilationDto(compilationRepository.findAll(pageable).getContent());
+            compilations = compilationRepository.findAll(pageable).getContent();
         } else {
-            return CompilationMapper.toCompilationDto(compilationRepository.findByPinned(pinned, pageable));
+            compilations = compilationRepository.findByPinned(pinned, pageable);
         }
+
+        Set<Event> events = compilations.stream()
+                .map(compilation -> compilation.getEvents())
+                .flatMap(Collection::stream)
+                .collect(Collectors.toSet());
+
+        Map<Long, Long> views = eventService.getViews(events);
+
+        return CompilationMapper.toCompilationDto(compilations, views);
     }
 
     @Override
     public CompilationDto addCompilation(NewCompilationDto compilationDto) {
         Compilation compilation = CompilationMapper.toCompilation(compilationDto);
-        return CompilationMapper.toCompilationDto(compilationRepository.save(compilation));
+        Map<Long, Long> views = eventService.getViews(compilation.getEvents());
+        return CompilationMapper.toCompilationDto(compilationRepository.save(compilation), views);
 
     }
 }

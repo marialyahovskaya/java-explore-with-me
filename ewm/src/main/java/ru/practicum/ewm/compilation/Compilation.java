@@ -23,8 +23,8 @@ public class Compilation {
 
     @ManyToMany
     @JoinTable(
-            name = "collection_event",
-            joinColumns = @JoinColumn(name = "collection_id"),
+            name = "compilation_event",
+            joinColumns = @JoinColumn(name = "compilation_id"),
             inverseJoinColumns = @JoinColumn(name = "event_id"))
     private Collection<Event> events;
 

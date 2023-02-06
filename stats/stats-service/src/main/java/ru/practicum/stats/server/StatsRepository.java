@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import ru.practicum.stats.server.model.EndpointHit;
-import ru.practicum.stats.server.dto.ViewStatsDto;
+import ru.practicum.stats.dto.ViewStatsDto;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -13,21 +13,21 @@ import java.util.List;
 @Repository
 public interface StatsRepository extends JpaRepository<EndpointHit, Long> {
 
-    @Query("select new ru.practicum.stats.server.dto.ViewStatsDto( h.app, h.uri, count(h.id)) " +
+    @Query("select new ru.practicum.stats.dto.ViewStatsDto(h.app, h.uri, count(h.id)) " +
             "from EndpointHit h " +
             "where h.timestamp > :start " +
             "  and h.timestamp < :end " +
             "group by h.app, h.uri order by count(h.id) DESC")
     List<ViewStatsDto> getViewStats(@Param("start") LocalDateTime start, @Param("end") LocalDateTime end);
 
-    @Query("select new ru.practicum.stats.server.dto.ViewStatsDto( h.app, h.uri, count(distinct h.ip)) " +
+    @Query("select new ru.practicum.stats.dto.ViewStatsDto(h.app, h.uri, count(distinct h.ip)) " +
             "from EndpointHit h " +
             "where h.timestamp > :start " +
             "  and h.timestamp < :end " +
             "group by h.app, h.uri order by count(h.id) DESC")
     List<ViewStatsDto> getUniqueViewStats(@Param("start") LocalDateTime start, @Param("end") LocalDateTime end);
 
-    @Query("select new ru.practicum.stats.server.dto.ViewStatsDto( h.app, h.uri, count(h.id)) " +
+    @Query("select new ru.practicum.stats.dto.ViewStatsDto(h.app, h.uri, count(h.id)) " +
             "from EndpointHit h " +
             "where h.timestamp > :start " +
             "  and h.timestamp < :end " +
@@ -37,7 +37,7 @@ public interface StatsRepository extends JpaRepository<EndpointHit, Long> {
                                           @Param("end") LocalDateTime end,
                                           @Param("uris") String[] uris);
 
-    @Query("select new ru.practicum.stats.server.dto.ViewStatsDto( h.app, h.uri, count(distinct h.ip)) " +
+    @Query("select new ru.practicum.stats.dto.ViewStatsDto(h.app, h.uri, count(distinct h.ip)) " +
             "from EndpointHit h " +
             "where h.timestamp > :start " +
             "  and h.timestamp < :end " +

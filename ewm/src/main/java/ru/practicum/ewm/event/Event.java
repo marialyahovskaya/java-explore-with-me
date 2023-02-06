@@ -3,7 +3,6 @@ package ru.practicum.ewm.event;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
-import org.springframework.data.geo.Point;
 import ru.practicum.ewm.category.Category;
 import ru.practicum.ewm.event.enums.EventState;
 import ru.practicum.ewm.request.ParticipationRequest;
@@ -52,8 +51,8 @@ public class Event {
     @JoinColumn(name = "initiator_id")
     private User initiator;
 
-    @Column(nullable = false)
-    private Point location;
+    @Embedded
+    private Location location;
 
     @Column(nullable = false)
     private Boolean paid;
@@ -70,12 +69,12 @@ public class Event {
     @Column(nullable = false)
     private String title;
 
-    private Long views;
-
     public Collection<ParticipationRequest> getConfirmedRequests(){
         return this.getRequests().stream()
                 .filter((request)-> request.getStatus() == ParticipationRequestStatus.CONFIRMED)
                 .collect(Collectors.toUnmodifiableList());
     }
+
+
 
 }

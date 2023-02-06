@@ -2,6 +2,7 @@ package ru.practicum.ewm.event.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.cfg.NotYetImplementedException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,14 +22,6 @@ public class PrivateEventController {
 
     private final EventService eventService;
 
-
-
-    @PostMapping
-    public ResponseEntity<EventFullDto> createEvent(@PathVariable Long userId,
-                                                       @RequestBody @Valid NewEventDto eventDto) throws ValidationException {
-        return new ResponseEntity<>(eventService.addEvent(userId, eventDto), HttpStatus.CREATED);
-    }
-
     @GetMapping
     public ResponseEntity<Collection<EventFullDto>> findEvents(
             @PathVariable Long userId,
@@ -36,5 +29,20 @@ public class PrivateEventController {
             @RequestParam(required = false, defaultValue = "10") Integer size) {
         return new ResponseEntity<>(eventService.findEvents(userId, from, size), HttpStatus.OK);
     }
+
+    @PostMapping
+    public ResponseEntity<EventFullDto> createEvent(@PathVariable Long userId,
+                                                       @RequestBody @Valid NewEventDto eventDto) throws ValidationException {
+        return new ResponseEntity<>(eventService.addEvent(userId, eventDto), HttpStatus.CREATED);
+    }
+
+//    @PatchMapping("/{eventId}")
+//    public ResponseEntity<EventFullDto> patchEvent(@PathVariable Long userId,
+//                                                   @PathVariable Long eventId,
+//                                                   @RequestBody ) {
+//
+//    }
+
+
 
 }

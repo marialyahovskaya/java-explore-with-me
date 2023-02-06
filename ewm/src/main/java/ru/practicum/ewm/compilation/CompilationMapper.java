@@ -7,23 +7,23 @@ import ru.practicum.ewm.event.EventMapper;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class CompilationMapper {
 
-    public static CompilationDto toCompilationDto (Compilation compilation) {
+    public static CompilationDto toCompilationDto (Compilation compilation, Map<Long, Long> eventViews) {
         CompilationDto compilationDto = new CompilationDto();
         compilationDto.setId(compilation.getId());
         compilationDto.setPinned(compilation.getPinned());
         compilationDto.setTitle(compilation.getTitle());
-        compilationDto.setEvents(EventMapper.toEventShortDto(compilation.getEvents()));
-
+        compilationDto.setEvents(EventMapper.toEventShortDto(compilation.getEvents(), eventViews));
         return compilationDto;
     }
 
-    public static Collection<CompilationDto> toCompilationDto(Collection<Compilation> compilations) {
+    public static Collection<CompilationDto> toCompilationDto(Collection<Compilation> compilations, Map<Long, Long> eventViews) {
         return compilations.stream()
-                .map(CompilationMapper::toCompilationDto)
+                .map(compilation -> CompilationMapper.toCompilationDto(compilation, eventViews))
                 .collect(Collectors.toUnmodifiableList());
 
     }
