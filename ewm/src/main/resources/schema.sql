@@ -26,8 +26,7 @@ CREATE TABLE if NOT EXISTS public.events
     published_on timestamp without time zone,
     request_moderation boolean,
     state varchar NOT NULL,
-    title varchar NOT NULL,
-    views int8 NOT NULL
+    title varchar NOT NULL
 );
 CREATE TABLE if NOT EXISTS public.requests
 (

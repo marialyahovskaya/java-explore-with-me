@@ -1,9 +1,7 @@
 package ru.practicum.ewm.event.service;
 
 import ru.practicum.ewm.event.Event;
-import ru.practicum.ewm.event.dto.EventFullDto;
-import ru.practicum.ewm.event.dto.EventShortDto;
-import ru.practicum.ewm.event.dto.NewEventDto;
+import ru.practicum.ewm.event.dto.*;
 import ru.practicum.ewm.event.enums.EventSort;
 
 import java.time.LocalDateTime;
@@ -36,4 +34,7 @@ public interface EventService {
                                          Integer from,
                                          Integer size);
 
+    EventFullDto patchEventByInitiator(Long userId, Long eventId, UpdateEventUserRequest updateEventUserRequest);
+
+    EventFullDto patchEventByAdmin(Long eventId, UpdateEventAdminRequest updateRequest);
 }

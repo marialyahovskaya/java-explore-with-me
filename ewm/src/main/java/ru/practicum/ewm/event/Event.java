@@ -11,6 +11,7 @@ import ru.practicum.ewm.user.User;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
@@ -70,6 +71,9 @@ public class Event {
     private String title;
 
     public Collection<ParticipationRequest> getConfirmedRequests(){
+        if (this.getRequests() == null){
+            return new ArrayList<>();
+        }
         return this.getRequests().stream()
                 .filter((request)-> request.getStatus() == ParticipationRequestStatus.CONFIRMED)
                 .collect(Collectors.toUnmodifiableList());

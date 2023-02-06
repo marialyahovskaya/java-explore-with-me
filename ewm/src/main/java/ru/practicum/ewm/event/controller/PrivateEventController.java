@@ -2,12 +2,12 @@ package ru.practicum.ewm.event.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.cfg.NotYetImplementedException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.event.dto.EventFullDto;
 import ru.practicum.ewm.event.dto.NewEventDto;
+import ru.practicum.ewm.event.dto.UpdateEventUserRequest;
 import ru.practicum.ewm.event.service.EventService;
 
 import javax.validation.Valid;
@@ -36,12 +36,13 @@ public class PrivateEventController {
         return new ResponseEntity<>(eventService.addEvent(userId, eventDto), HttpStatus.CREATED);
     }
 
-//    @PatchMapping("/{eventId}")
-//    public ResponseEntity<EventFullDto> patchEvent(@PathVariable Long userId,
-//                                                   @PathVariable Long eventId,
-//                                                   @RequestBody ) {
-//
-//    }
+    @PatchMapping("/{eventId}")
+    public ResponseEntity<EventFullDto> patchEvent(@PathVariable Long userId,
+                                                   @PathVariable Long eventId,
+                                                   @RequestBody UpdateEventUserRequest updateEventUserRequest) {
+        return new ResponseEntity<>(eventService.patchEventByInitiator(userId, eventId, updateEventUserRequest), HttpStatus.OK);
+
+    }
 
 
 

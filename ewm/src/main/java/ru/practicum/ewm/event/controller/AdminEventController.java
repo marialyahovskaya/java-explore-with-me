@@ -7,6 +7,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.event.dto.EventFullDto;
 import ru.practicum.ewm.event.dto.NewEventDto;
+import ru.practicum.ewm.event.dto.UpdateEventAdminRequest;
+import ru.practicum.ewm.event.dto.UpdateEventUserRequest;
 import ru.practicum.ewm.event.service.EventService;
 
 import javax.validation.Valid;
@@ -33,6 +35,13 @@ public class AdminEventController {
             @RequestParam(required = false, defaultValue = "0") Integer from,
             @RequestParam(required = false, defaultValue = "10") Integer size) {
         return new ResponseEntity<>(eventService.findEvents(users, states, categories, rangeStart, rangeEnd, from, size), HttpStatus.OK);
+    }
+
+    @PatchMapping("/{eventId}")
+    public ResponseEntity<EventFullDto> patchEvent(@PathVariable Long eventId,
+                                                   @RequestBody UpdateEventAdminRequest updateRequest) {
+        return new ResponseEntity<>(eventService.patchEventByAdmin(eventId, updateRequest), HttpStatus.OK);
+
     }
 
 

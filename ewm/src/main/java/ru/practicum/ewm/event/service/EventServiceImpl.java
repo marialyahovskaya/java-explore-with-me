@@ -2,21 +2,21 @@ package ru.practicum.ewm.event.service;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ru.practicum.ewm.PaginationHelper;
 import ru.practicum.ewm.category.Category;
+import ru.practicum.ewm.category.CategoryMapper;
 import ru.practicum.ewm.category.CategoryRepository;
 import ru.practicum.ewm.event.Event;
 import ru.practicum.ewm.event.EventMapper;
 import ru.practicum.ewm.event.EventRepository;
 import ru.practicum.ewm.event.QEvent;
-import ru.practicum.ewm.event.dto.EventFullDto;
-import ru.practicum.ewm.event.dto.EventShortDto;
-import ru.practicum.ewm.event.dto.NewEventDto;
+import ru.practicum.ewm.event.dto.*;
 import ru.practicum.ewm.event.enums.EventSort;
 import ru.practicum.ewm.event.enums.EventState;
+import ru.practicum.ewm.event.enums.StateAdminAction;
+import ru.practicum.ewm.event.enums.StateUserAction;
 import ru.practicum.ewm.user.User;
 import ru.practicum.ewm.user.UserRepository;
 import ru.practicum.stats.client.StatsClient;
@@ -139,6 +139,91 @@ public class EventServiceImpl implements EventService {
 
         Collection<Event> events = eventRepository.findAll(expression, pageable).getContent();
         return EventMapper.toEventShortDto(events, this.getViews(events));
+    }
+
+    @Override
+    public EventFullDto patchEventByInitiator(Long userId, Long eventId, UpdateEventUserRequest updateRequest) {
+
+        User user = userRepository.findById(userId) .orElseThrow(RuntimeException::new);
+        Event eventToUpdate = eventRepository.findById(eventId) .orElseThrow(RuntimeException::new);
+        if (userId != eventToUpdate.getInitiator().getId()){
+            throw new RuntimeException();
+        }
+        if (updateRequest.getAnnotation() != null){
+            eventToUpdate.setAnnotation(updateRequest.getAnnotation());
+        }
+        if (updateRequest.getCategory() != null){
+            eventToUpdate.setCategory(CategoryMapper.toCategory(updateRequest.getCategory()));
+        }
+        if (updateRequest.getDescription() != null){
+            eventToUpdate.setDescription(updateRequest.getDescription());
+        }
+        if (updateRequest.getEventDate() != null){
+            eventToUpdate.setEventDate(updateRequest.getEventDate());
+        }
+        if (updateRequest.getLocation() != null){
+            eventToUpdate.setPaid(updateRequest.getPaid());
+        }
+        if (updateRequest.getParticipantLimit() != null){
+            eventToUpdate.setParticipantLimit(updateRequest.getParticipantLimit());
+        }
+        if (updateRequest.getRequestModeration() != null){
+            eventToUpdate.setRequestModeration(updateRequest.getRequestModeration());
+        }
+        if (updateRequest.getStateAction() != null){
+            if (updateRequest.getStateAction() == StateUserAction.SEND_TO_REVIEW){
+                eventToUpdate.setState(EventState.PENDING);
+            }else if(updateRequest.getStateAction() == StateUserAction.CANCEL_REVIEW){
+                eventToUpdate.setState(EventState.PUBLISHED);
+            }
+        }
+        if (updateRequest.getTitle() != null){
+            eventToUpdate.setTitle(updateRequest.getTitle());
+        }
+
+        Event updatedEvent = eventRepository.save(eventToUpdate);
+
+        return EventMapper.toEventFullDto(updatedEvent, this.getViews(List.of(updatedEvent)));
+    }
+
+    @Override
+    public EventFullDto patchEventByAdmin(Long eventId, UpdateEventAdminRequest updateRequest) {
+        Event eventToUpdate = eventRepository.findById(eventId) .orElseThrow(RuntimeException::new);
+        if (updateRequest.getAnnotation() != null){
+            eventToUpdate.setAnnotation(updateRequest.getAnnotation());
+        }
+        if (updateRequest.getCategory() != null){
+            eventToUpdate.setCategory(CategoryMapper.toCategory(updateRequest.getCategory()));
+        }
+        if (updateRequest.getDescription() != null){
+            eventToUpdate.setDescription(updateRequest.getDescription());
+        }
+        if (updateRequest.getEventDate() != null){
+            eventToUpdate.setEventDate(updateRequest.getEventDate());
+        }
+        if (updateRequest.getLocation() != null){
+            eventToUpdate.setPaid(updateRequest.getPaid());
+        }
+        if (updateRequest.getParticipantLimit() != null){
+            eventToUpdate.setParticipantLimit(updateRequest.getParticipantLimit());
+        }
+        if (updateRequest.getRequestModeration() != null){
+            eventToUpdate.setRequestModeration(updateRequest.getRequestModeration());
+        }
+        if (updateRequest.getStateAction() != null){
+            if (updateRequest.getStateAction() == StateAdminAction.PUBLISH_EVENT){
+                eventToUpdate.setState(EventState.PUBLISHED);
+            }else if(updateRequest.getStateAction() == StateAdminAction.REJECT_EVENT){
+                eventToUpdate.setState(EventState.CANCELED);
+            }
+        }
+        if (updateRequest.getTitle() != null){
+            eventToUpdate.setTitle(updateRequest.getTitle());
+        }
+
+        Event updatedEvent = eventRepository.save(eventToUpdate);
+
+        return EventMapper.toEventFullDto(updatedEvent, this.getViews(List.of(updatedEvent)));
     }
 
     @Override
