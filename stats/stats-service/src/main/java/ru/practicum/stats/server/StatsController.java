@@ -31,6 +31,10 @@ public class StatsController {
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime end,
             @RequestParam(required = false) String[] uris,
             @RequestParam(required = false, defaultValue = "false") Boolean unique) {
+        log.info("START: " + start.toString());
+        log.info("END: " + end.toString());
+        log.info("URIS: " + (uris == null ? "null" : uris.toString()));
+
         return new ResponseEntity<>(statsService.getViewStats(start, end, uris, unique), HttpStatus.OK);
     }
 
