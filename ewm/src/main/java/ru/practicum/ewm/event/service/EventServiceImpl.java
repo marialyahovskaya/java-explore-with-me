@@ -17,6 +17,13 @@ import ru.practicum.ewm.event.enums.EventSort;
 import ru.practicum.ewm.event.enums.EventState;
 import ru.practicum.ewm.event.enums.StateAdminAction;
 import ru.practicum.ewm.event.enums.StateUserAction;
+import ru.practicum.ewm.exception.ConflictException;
+import ru.practicum.ewm.request.ParticipationRequest;
+import ru.practicum.ewm.request.RequestMapper;
+import ru.practicum.ewm.request.RequestRepository;
+import ru.practicum.ewm.request.dto.ParticipationRequestDto;
+import ru.practicum.ewm.request.enums.ParticipationRequestStatus;
+import ru.practicum.ewm.request.enums.ParticipationRequestStatusUpdate;
 import ru.practicum.ewm.user.User;
 import ru.practicum.ewm.user.UserRepository;
 import ru.practicum.stats.client.StatsClient;
@@ -38,6 +45,8 @@ public class EventServiceImpl implements EventService {
     private final EventRepository eventRepository;
     private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
+
+    private final RequestRepository requestRepository;
     private final StatsClient statsClient;
 
     @Override
@@ -144,40 +153,40 @@ public class EventServiceImpl implements EventService {
     @Override
     public EventFullDto patchEventByInitiator(Long userId, Long eventId, UpdateEventUserRequest updateRequest) {
 
-        User user = userRepository.findById(userId) .orElseThrow(RuntimeException::new);
-        Event eventToUpdate = eventRepository.findById(eventId) .orElseThrow(RuntimeException::new);
-        if (userId != eventToUpdate.getInitiator().getId()){
+        User user = userRepository.findById(userId).orElseThrow(RuntimeException::new);
+        Event eventToUpdate = eventRepository.findById(eventId).orElseThrow(RuntimeException::new);
+        if (userId != eventToUpdate.getInitiator().getId()) {
             throw new RuntimeException();
         }
-        if (updateRequest.getAnnotation() != null){
+        if (updateRequest.getAnnotation() != null) {
             eventToUpdate.setAnnotation(updateRequest.getAnnotation());
         }
-        if (updateRequest.getCategory() != null){
+        if (updateRequest.getCategory() != null) {
             eventToUpdate.setCategory(CategoryMapper.toCategory(updateRequest.getCategory()));
         }
-        if (updateRequest.getDescription() != null){
+        if (updateRequest.getDescription() != null) {
             eventToUpdate.setDescription(updateRequest.getDescription());
         }
-        if (updateRequest.getEventDate() != null){
+        if (updateRequest.getEventDate() != null) {
             eventToUpdate.setEventDate(updateRequest.getEventDate());
         }
-        if (updateRequest.getLocation() != null){
+        if (updateRequest.getLocation() != null) {
             eventToUpdate.setPaid(updateRequest.getPaid());
         }
-        if (updateRequest.getParticipantLimit() != null){
+        if (updateRequest.getParticipantLimit() != null) {
             eventToUpdate.setParticipantLimit(updateRequest.getParticipantLimit());
         }
-        if (updateRequest.getRequestModeration() != null){
+        if (updateRequest.getRequestModeration() != null) {
             eventToUpdate.setRequestModeration(updateRequest.getRequestModeration());
         }
-        if (updateRequest.getStateAction() != null){
-            if (updateRequest.getStateAction() == StateUserAction.SEND_TO_REVIEW){
+        if (updateRequest.getStateAction() != null) {
+            if (updateRequest.getStateAction() == StateUserAction.SEND_TO_REVIEW) {
                 eventToUpdate.setState(EventState.PENDING);
-            }else if(updateRequest.getStateAction() == StateUserAction.CANCEL_REVIEW){
+            } else if (updateRequest.getStateAction() == StateUserAction.CANCEL_REVIEW) {
                 eventToUpdate.setState(EventState.PUBLISHED);
             }
         }
-        if (updateRequest.getTitle() != null){
+        if (updateRequest.getTitle() != null) {
             eventToUpdate.setTitle(updateRequest.getTitle());
         }
 
@@ -188,42 +197,83 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public EventFullDto patchEventByAdmin(Long eventId, UpdateEventAdminRequest updateRequest) {
-        Event eventToUpdate = eventRepository.findById(eventId) .orElseThrow(RuntimeException::new);
-        if (updateRequest.getAnnotation() != null){
+        Event eventToUpdate = eventRepository.findById(eventId).orElseThrow(RuntimeException::new);
+        if (updateRequest.getAnnotation() != null) {
             eventToUpdate.setAnnotation(updateRequest.getAnnotation());
         }
-        if (updateRequest.getCategory() != null){
+        if (updateRequest.getCategory() != null) {
             eventToUpdate.setCategory(CategoryMapper.toCategory(updateRequest.getCategory()));
         }
-        if (updateRequest.getDescription() != null){
+        if (updateRequest.getDescription() != null) {
             eventToUpdate.setDescription(updateRequest.getDescription());
         }
-        if (updateRequest.getEventDate() != null){
+        if (updateRequest.getEventDate() != null) {
             eventToUpdate.setEventDate(updateRequest.getEventDate());
         }
-        if (updateRequest.getLocation() != null){
+        if (updateRequest.getLocation() != null) {
             eventToUpdate.setPaid(updateRequest.getPaid());
         }
-        if (updateRequest.getParticipantLimit() != null){
+        if (updateRequest.getParticipantLimit() != null) {
             eventToUpdate.setParticipantLimit(updateRequest.getParticipantLimit());
         }
-        if (updateRequest.getRequestModeration() != null){
+        if (updateRequest.getRequestModeration() != null) {
             eventToUpdate.setRequestModeration(updateRequest.getRequestModeration());
         }
-        if (updateRequest.getStateAction() != null){
-            if (updateRequest.getStateAction() == StateAdminAction.PUBLISH_EVENT){
+        if (updateRequest.getStateAction() != null) {
+            if (updateRequest.getStateAction() == StateAdminAction.PUBLISH_EVENT) {
                 eventToUpdate.setState(EventState.PUBLISHED);
-            }else if(updateRequest.getStateAction() == StateAdminAction.REJECT_EVENT){
+            } else if (updateRequest.getStateAction() == StateAdminAction.REJECT_EVENT) {
                 eventToUpdate.setState(EventState.CANCELED);
             }
         }
-        if (updateRequest.getTitle() != null){
+        if (updateRequest.getTitle() != null) {
             eventToUpdate.setTitle(updateRequest.getTitle());
         }
 
         Event updatedEvent = eventRepository.save(eventToUpdate);
 
         return EventMapper.toEventFullDto(updatedEvent, this.getViews(List.of(updatedEvent)));
+    }
+
+    @Override
+    public EventRequestStatusUpdateResult changeRequestStatus(Long userId, Long eventId, EventRequestStatusUpdateRequest statusUpdateRequest) {
+        User user = userRepository.findById(userId).orElseThrow(RuntimeException::new);
+        Event event = eventRepository.findById(eventId).orElseThrow(RuntimeException::new);
+        EventRequestStatusUpdateResult result = new EventRequestStatusUpdateResult();
+        for (Long requestId :
+                statusUpdateRequest.getRequestIds()) {
+            ParticipationRequest request = requestRepository.findById(requestId).orElseThrow(RuntimeException::new);
+            if (request.getStatus() != ParticipationRequestStatus.PENDING) {
+                throw new ConflictException("Cannot change request status");
+            }
+            if (statusUpdateRequest.getStatus() == ParticipationRequestStatusUpdate.CONFIRMED) {
+                if (event.getParticipantLimit() == 0 || event.getRequestModeration() == false) {
+                    // Подтверждаем заявку
+                    request.setStatus(ParticipationRequestStatus.CONFIRMED);
+                    ParticipationRequestDto requestDto = RequestMapper.toRequestDto(requestRepository.save(request));
+                    result.getConfirmedRequests().add(requestDto);
+                } else if (event.getConfirmedRequests().size() < event.getParticipantLimit()) {
+                    // Подтверждаем заявку
+                    request.setStatus(ParticipationRequestStatus.CONFIRMED);
+                    ParticipationRequestDto requestDto = RequestMapper.toRequestDto(requestRepository.save(request));
+                    result.getConfirmedRequests().add(requestDto);
+                } else {
+                    // Отклоняем все неподтвержденные заявки и выходим из цикла
+                    request.setStatus(ParticipationRequestStatus.REJECTED);
+                    ParticipationRequestDto requestDto = RequestMapper.toRequestDto(requestRepository.save(request));
+                    result.getRejectedRequests().add(requestDto);
+                }
+            } else {
+                // Отклоняем заявку
+                request.setStatus(ParticipationRequestStatus.REJECTED);
+                ParticipationRequestDto requestDto = RequestMapper.toRequestDto(requestRepository.save(request));
+                result.getRejectedRequests().add(requestDto);
+            }
+
+        }
+
+
+        return result;
     }
 
     @Override

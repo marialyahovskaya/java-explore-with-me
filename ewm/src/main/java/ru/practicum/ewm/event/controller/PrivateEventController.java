@@ -5,9 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.ewm.event.dto.EventFullDto;
-import ru.practicum.ewm.event.dto.NewEventDto;
-import ru.practicum.ewm.event.dto.UpdateEventUserRequest;
+import ru.practicum.ewm.event.dto.*;
 import ru.practicum.ewm.event.service.EventService;
 
 import javax.validation.Valid;
@@ -41,6 +39,14 @@ public class PrivateEventController {
                                                    @PathVariable Long eventId,
                                                    @RequestBody UpdateEventUserRequest updateEventUserRequest) {
         return new ResponseEntity<>(eventService.patchEventByInitiator(userId, eventId, updateEventUserRequest), HttpStatus.OK);
+
+    }
+
+    @PatchMapping("/{eventId}/requests")
+    public ResponseEntity<EventRequestStatusUpdateResult> changeRequestStatus(@PathVariable Long userId,
+                                                                              @PathVariable Long eventId,
+                                                                              @RequestBody EventRequestStatusUpdateRequest statusUpdateRequest) {
+        return new ResponseEntity<>(eventService.changeRequestStatus(userId, eventId, statusUpdateRequest), HttpStatus.OK);
 
     }
 

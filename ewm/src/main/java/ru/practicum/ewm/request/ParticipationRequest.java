@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import ru.practicum.ewm.event.Event;
-import ru.practicum.ewm.request.dto.ParticipationRequestStatus;
+import ru.practicum.ewm.request.enums.ParticipationRequestStatus;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -26,12 +26,10 @@ public class ParticipationRequest {
     @CreationTimestamp
     private LocalDateTime created;
 
-//    @Column(nullable = false, name = "event_id")
-//    private Long eventId;
-
     @Column(nullable = false)
     private Long requesterId;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private ParticipationRequestStatus status;
 
@@ -46,7 +44,6 @@ public class ParticipationRequest {
         Event event = new Event();
         event.setId(eventId);
         request.setEvent(event);
-//        request.setEventId(eventId);
         request.setStatus(ParticipationRequestStatus.PENDING);
 
         return request;

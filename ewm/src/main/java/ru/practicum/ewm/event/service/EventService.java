@@ -37,4 +37,8 @@ public interface EventService {
     EventFullDto patchEventByInitiator(Long userId, Long eventId, UpdateEventUserRequest updateEventUserRequest);
 
     EventFullDto patchEventByAdmin(Long eventId, UpdateEventAdminRequest updateRequest);
+
+    EventRequestStatusUpdateResult changeRequestStatus(Long userId, Long eventId, EventRequestStatusUpdateRequest statusUpdateRequest);
+
+
 }

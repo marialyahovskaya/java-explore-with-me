@@ -77,11 +77,9 @@ public class StatsClient extends BaseClient {
                 .queryParam("end",LocalDateTime.now().format(formatter)
                 ).build();
 
-        log.info("URI to check: " + uri.encode());
 
         ViewStatsDto[] stats = rest.getForObject(uri.toString(), ViewStatsDto[].class);
 
-        log.info("STATS: " + stats.toString());
         return Arrays.stream(stats).collect(Collectors.toUnmodifiableList());
     }
 }

@@ -6,7 +6,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import ru.practicum.ewm.category.Category;
 import ru.practicum.ewm.event.enums.EventState;
 import ru.practicum.ewm.request.ParticipationRequest;
-import ru.practicum.ewm.request.dto.ParticipationRequestStatus;
+import ru.practicum.ewm.request.enums.ParticipationRequestStatus;
 import ru.practicum.ewm.user.User;
 
 import javax.persistence.*;

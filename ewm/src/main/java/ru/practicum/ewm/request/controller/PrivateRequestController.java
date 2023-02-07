@@ -22,5 +22,4 @@ public class PrivateRequestController {
                                                                  @RequestParam Long eventId) throws ValidationException {
         return new ResponseEntity<>(requestService.addRequest(userId, eventId), HttpStatus.CREATED);
     }
-
 }
