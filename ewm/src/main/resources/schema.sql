@@ -8,7 +8,7 @@ CREATE TABLE if NOT EXISTS public.users
 CREATE TABLE if NOT EXISTS public.categories
 (
     id int8 GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    name varchar NOT NULL
+    name varchar NOT NULL UNIQUE
 );
 CREATE TABLE if NOT EXISTS public.events
 (

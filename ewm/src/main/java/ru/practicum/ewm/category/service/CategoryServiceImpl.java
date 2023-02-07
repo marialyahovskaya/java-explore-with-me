@@ -1,6 +1,8 @@
 package ru.practicum.ewm.category.service;
 
 import lombok.RequiredArgsConstructor;
+import org.hibernate.exception.ConstraintViolationException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ru.practicum.ewm.PaginationHelper;
@@ -9,6 +11,7 @@ import ru.practicum.ewm.category.CategoryMapper;
 import ru.practicum.ewm.category.CategoryRepository;
 import ru.practicum.ewm.category.dto.CategoryDto;
 import ru.practicum.ewm.category.dto.NewCategoryDto;
+import ru.practicum.ewm.exception.ConflictException;
 
 import java.util.Collection;
 
@@ -22,9 +25,14 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public CategoryDto addCategory(final NewCategoryDto categoryDto) {
-
         Category category = CategoryMapper.toCategory(categoryDto);
-        return CategoryMapper.toCategoryDto(categoryRepository.save(category));
+        Category createdCategory;
+        try {
+            createdCategory = categoryRepository.save(category);
+        } catch (DataIntegrityViolationException e) {
+            throw new ConflictException("Name is not unique");
+        }
+        return CategoryMapper.toCategoryDto(createdCategory);
     }
 
     @Override
@@ -41,8 +49,12 @@ public class CategoryServiceImpl implements CategoryService {
                 .orElseThrow(() -> new RuntimeException("Category not found"));
 
         categoryToUpdate.setName(categoryDto.getName());
-
-        Category updatedCategory = categoryRepository.save(categoryToUpdate);
+        Category updatedCategory;
+        try {
+            updatedCategory = categoryRepository.save(categoryToUpdate);
+        } catch (DataIntegrityViolationException e) {
+            throw new ConflictException("Name is not unique");
+        }
         return CategoryMapper.toCategoryDto(updatedCategory);
 
     }
