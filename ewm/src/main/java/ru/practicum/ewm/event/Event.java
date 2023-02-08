@@ -70,12 +70,12 @@ public class Event {
     @Column(nullable = false)
     private String title;
 
-    public Collection<ParticipationRequest> getConfirmedRequests(){
-        if (this.getRequests() == null){
+    public Collection<ParticipationRequest> getConfirmedRequests() {
+        if (this.getRequests() == null) {
             return new ArrayList<>();
         }
         return this.getRequests().stream()
-                .filter((request)-> request.getStatus() == ParticipationRequestStatus.CONFIRMED)
+                .filter((request) -> request.getStatus() == ParticipationRequestStatus.CONFIRMED)
                 .collect(Collectors.toUnmodifiableList());
     }
 }

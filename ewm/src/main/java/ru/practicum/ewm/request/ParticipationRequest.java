@@ -38,7 +38,7 @@ public class ParticipationRequest {
     @JsonBackReference
     private Event event;
 
-    public static ParticipationRequest of(Long userId, Long eventId){
+    public static ParticipationRequest of(Long userId, Long eventId) {
         ParticipationRequest request = new ParticipationRequest();
         request.setRequesterId(userId);
         Event event = new Event();

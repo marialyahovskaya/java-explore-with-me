@@ -28,6 +28,7 @@ public class AdminCategoryController {
                                                      @RequestBody @Valid NewCategoryDto categoryDto) throws ValidationException {
         return new ResponseEntity<>(categoryService.patchCategory(id, categoryDto), HttpStatus.OK);
     }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteCategory(@PathVariable Long id) throws ValidationException {
         categoryService.deleteCategory(id);

@@ -1,9 +1,6 @@
 package ru.practicum.ewm.request;
 
 import ru.practicum.ewm.request.dto.ParticipationRequestDto;
-import ru.practicum.ewm.user.User;
-import ru.practicum.ewm.user.UserMapper;
-import ru.practicum.ewm.user.dto.UserDto;
 
 import java.util.Collection;
 import java.util.stream.Collectors;

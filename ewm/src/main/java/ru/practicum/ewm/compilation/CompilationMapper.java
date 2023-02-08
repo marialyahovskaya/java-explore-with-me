@@ -5,14 +5,13 @@ import ru.practicum.ewm.compilation.dto.NewCompilationDto;
 import ru.practicum.ewm.event.Event;
 import ru.practicum.ewm.event.EventMapper;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 public class CompilationMapper {
 
-    public static CompilationDto toCompilationDto (Compilation compilation, Map<Long, Long> eventViews) {
+    public static CompilationDto toCompilationDto(Compilation compilation, Map<Long, Long> eventViews) {
         CompilationDto compilationDto = new CompilationDto();
         compilationDto.setId(compilation.getId());
         compilationDto.setPinned(compilation.getPinned());

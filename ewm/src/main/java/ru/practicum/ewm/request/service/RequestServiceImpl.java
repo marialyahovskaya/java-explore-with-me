@@ -59,15 +59,15 @@ public class RequestServiceImpl implements RequestService {
 
     @Override
     public Collection<ParticipationRequestDto> findRequests(Long userId) {
-        userRepository.findById(userId).orElseThrow(()-> new NotFoundException("User not found"));
+        userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User not found"));
         return RequestMapper.toRequestDto(requestRepository.findByRequesterId(userId));
     }
 
     @Override
     public ParticipationRequestDto cancelRequest(Long userId, Long requestId) {
-        userRepository.findById(userId).orElseThrow(()->new NotFoundException("User not found"));
+        userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User not found"));
         ParticipationRequest request = requestRepository.findById(requestId)
-                .orElseThrow(()->new NotFoundException("Participation request not found"));
+                .orElseThrow(() -> new NotFoundException("Participation request not found"));
         if (!request.getRequesterId().equals(userId)) {
             throw new NotFoundException("Participation request not found");
         }

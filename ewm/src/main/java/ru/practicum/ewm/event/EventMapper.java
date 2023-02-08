@@ -55,7 +55,7 @@ public class EventMapper {
         return eventDto;
     }
 
-    public static EventFullDto toEventFullDto(Event event, Map<Long, Long> views){
+    public static EventFullDto toEventFullDto(Event event, Map<Long, Long> views) {
         return toEventFullDto(event, views.get(event.getId()));
     }
 

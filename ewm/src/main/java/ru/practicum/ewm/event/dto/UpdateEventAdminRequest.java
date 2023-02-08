@@ -3,7 +3,6 @@ package ru.practicum.ewm.event.dto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.Setter;
-import ru.practicum.ewm.category.dto.CategoryDto;
 import ru.practicum.ewm.event.Location;
 import ru.practicum.ewm.event.enums.StateAdminAction;
 
