@@ -1,6 +1,5 @@
 package ru.practicum.ewm.compilation;
 
-
 import lombok.*;
 import ru.practicum.ewm.event.Event;
 

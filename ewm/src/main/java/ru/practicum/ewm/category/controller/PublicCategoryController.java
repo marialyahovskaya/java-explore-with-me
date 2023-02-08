@@ -3,10 +3,7 @@ package ru.practicum.ewm.category.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.category.dto.CategoryDto;
 import ru.practicum.ewm.category.service.CategoryService;
 import ru.practicum.stats.client.StatsClient;
@@ -24,7 +21,6 @@ public class PublicCategoryController {
 
     private final StatsClient statsClient;
 
-
     @GetMapping
     public ResponseEntity<Collection<CategoryDto>> findCategories(
             HttpServletRequest request,
@@ -32,5 +28,10 @@ public class PublicCategoryController {
             @RequestParam(required = false, defaultValue = "10") Integer size) throws ValidationException {
         statsClient.hit(request);
         return new ResponseEntity<>(categoryService.findCategories(from, size), HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<CategoryDto> findCategory(@PathVariable Long id) {
+        return new ResponseEntity<>(categoryService.findCategory(id), HttpStatus.OK);
     }
 }

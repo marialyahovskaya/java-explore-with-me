@@ -18,7 +18,6 @@ public class AdminCategoryController {
 
     private final CategoryService categoryService;
 
-
     @PostMapping
     public ResponseEntity<CategoryDto> createCategory(@RequestBody @Valid NewCategoryDto categoryDto) throws ValidationException {
         return new ResponseEntity<>(categoryService.addCategory(categoryDto), HttpStatus.CREATED);
@@ -28,5 +27,10 @@ public class AdminCategoryController {
     public ResponseEntity<CategoryDto> patchCategory(@PathVariable Long id,
                                                      @RequestBody @Valid NewCategoryDto categoryDto) throws ValidationException {
         return new ResponseEntity<>(categoryService.patchCategory(id, categoryDto), HttpStatus.OK);
+    }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteCategory(@PathVariable Long id) throws ValidationException {
+        categoryService.deleteCategory(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

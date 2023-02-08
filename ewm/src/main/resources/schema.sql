@@ -34,7 +34,8 @@ CREATE TABLE if NOT EXISTS public.requests
     event_id int8 NOT NULL,
     created timestamp without time zone NOT NULL,
     requester_id int8 NOT NULL,
-    status varchar NOT NULL
+    status varchar NOT NULL,
+    CONSTRAINT uq_requests UNIQUE(event_id, requester_id)
 );
 CREATE TABLE if NOT EXISTS public.compilations
 (

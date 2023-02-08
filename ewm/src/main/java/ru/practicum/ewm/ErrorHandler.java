@@ -9,7 +9,6 @@ import ru.practicum.ewm.exception.ErrorResponse;
 import ru.practicum.ewm.exception.NotFoundException;
 import ru.practicum.ewm.exception.ValidationException;
 
-
 @RestControllerAdvice
 public class ErrorHandler {
 

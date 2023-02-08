@@ -11,7 +11,9 @@ import ru.practicum.ewm.category.CategoryMapper;
 import ru.practicum.ewm.category.CategoryRepository;
 import ru.practicum.ewm.category.dto.CategoryDto;
 import ru.practicum.ewm.category.dto.NewCategoryDto;
+import ru.practicum.ewm.event.EventRepository;
 import ru.practicum.ewm.exception.ConflictException;
+import ru.practicum.ewm.exception.NotFoundException;
 
 import java.util.Collection;
 
@@ -20,8 +22,9 @@ import java.util.Collection;
 @RequiredArgsConstructor
 public class CategoryServiceImpl implements CategoryService {
 
-
     private final CategoryRepository categoryRepository;
+
+    private final EventRepository eventRepository;
 
     @Override
     public CategoryDto addCategory(final NewCategoryDto categoryDto) {
@@ -57,5 +60,20 @@ public class CategoryServiceImpl implements CategoryService {
         }
         return CategoryMapper.toCategoryDto(updatedCategory);
 
+    }
+
+    @Override
+    public void deleteCategory(Long id) {
+        Category category = categoryRepository.findById(id).orElseThrow(() -> new NotFoundException("Category not found"));
+        if (eventRepository.countByCategoryId(id) > 0) {
+            throw new ConflictException("Cannot delete category with linked events");
+        }
+        categoryRepository.delete(category);
+    }
+
+    @Override
+    public CategoryDto findCategory(Long id) {
+        Category category = categoryRepository.findById(id).orElseThrow(() -> new NotFoundException("Category not found"));
+        return CategoryMapper.toCategoryDto(category);
     }
 }

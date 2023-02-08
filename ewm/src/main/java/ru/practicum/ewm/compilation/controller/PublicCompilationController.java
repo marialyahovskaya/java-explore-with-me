@@ -3,11 +3,7 @@ package ru.practicum.ewm.compilation.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-import ru.practicum.ewm.category.dto.CategoryDto;
+import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.compilation.dto.CompilationDto;
 import ru.practicum.ewm.compilation.service.CompilationService;
 import ru.practicum.stats.client.StatsClient;
@@ -32,6 +28,11 @@ public class PublicCompilationController {
             @RequestParam(required = false, defaultValue = "0") Integer from,
             @RequestParam(required = false, defaultValue = "10") Integer size) throws ValidationException {
         statsClient.hit(request);
-        return new ResponseEntity<>(compilationService.findCategories(pinned, from, size), HttpStatus.OK);
+        return new ResponseEntity<>(compilationService.findCompilations(pinned, from, size), HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<CompilationDto> findCompilation(@PathVariable Long id) {
+        return new ResponseEntity<>(compilationService.findCompilation(id), HttpStatus.OK);
     }
 }

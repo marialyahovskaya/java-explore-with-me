@@ -13,5 +13,4 @@ public class EventRequestStatusUpdateRequest {
     private Collection<Long> requestIds;
 
     private ParticipationRequestStatusUpdate status;
-
 }

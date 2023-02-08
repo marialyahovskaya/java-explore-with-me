@@ -48,5 +48,4 @@ public class ParticipationRequest {
 
         return request;
     }
-
 }

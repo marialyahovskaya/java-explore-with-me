@@ -11,4 +11,5 @@ public interface UserService {
 
     Collection<UserDto> findUsers(Long[] ids, Integer from, Integer size);
 
+    void deleteUser(Long id);
 }

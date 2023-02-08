@@ -1,6 +1,12 @@
 package ru.practicum.ewm.request;
 
 import ru.practicum.ewm.request.dto.ParticipationRequestDto;
+import ru.practicum.ewm.user.User;
+import ru.practicum.ewm.user.UserMapper;
+import ru.practicum.ewm.user.dto.UserDto;
+
+import java.util.Collection;
+import java.util.stream.Collectors;
 
 public class RequestMapper {
     public static ParticipationRequestDto toRequestDto(ParticipationRequest request) {
@@ -12,5 +18,11 @@ public class RequestMapper {
         requestDto.setStatus(request.getStatus());
 
         return requestDto;
+    }
+
+    public static Collection<ParticipationRequestDto> toRequestDto(Collection<ParticipationRequest> requests) {
+        return requests.stream()
+                .map(RequestMapper::toRequestDto)
+                .collect(Collectors.toUnmodifiableList());
     }
 }

@@ -2,10 +2,10 @@ package ru.practicum.stats.server.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.practicum.stats.server.StatsRepository;
 import ru.practicum.stats.dto.EndpointHitDto;
-import ru.practicum.stats.server.mapper.EndpointHitMapper;
 import ru.practicum.stats.dto.ViewStatsDto;
+import ru.practicum.stats.server.StatsRepository;
+import ru.practicum.stats.server.mapper.EndpointHitMapper;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -37,5 +37,4 @@ public class StatsServiceImpl implements StatsService {
             }
         }
     }
-
 }

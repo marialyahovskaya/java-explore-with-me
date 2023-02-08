@@ -25,19 +25,13 @@ public class CompilationMapper {
         return compilations.stream()
                 .map(compilation -> CompilationMapper.toCompilationDto(compilation, eventViews))
                 .collect(Collectors.toUnmodifiableList());
-
     }
 
-    public static Compilation toCompilation(NewCompilationDto compilationDto) {
+    public static Compilation toCompilation(NewCompilationDto compilationDto, Collection<Event> events) {
         Compilation compilation = new Compilation();
         compilation.setTitle(compilationDto.getTitle());
         compilation.setPinned(compilationDto.getPinned());
-        compilation.setEvents(Arrays.stream(compilationDto.getEvents()).map((id)-> {
-            Event event = new Event();
-            event.setId(id);
-            return event;
-        }).collect(Collectors.toUnmodifiableList()));
-
+        compilation.setEvents(events);
         return compilation;
     }
 }

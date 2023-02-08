@@ -78,7 +78,4 @@ public class Event {
                 .filter((request)-> request.getStatus() == ParticipationRequestStatus.CONFIRMED)
                 .collect(Collectors.toUnmodifiableList());
     }
-
-
-
 }

@@ -3,6 +3,7 @@ package ru.practicum.ewm.event.service;
 import ru.practicum.ewm.event.Event;
 import ru.practicum.ewm.event.dto.*;
 import ru.practicum.ewm.event.enums.EventSort;
+import ru.practicum.ewm.request.dto.ParticipationRequestDto;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
@@ -40,5 +41,7 @@ public interface EventService {
 
     EventRequestStatusUpdateResult changeRequestStatus(Long userId, Long eventId, EventRequestStatusUpdateRequest statusUpdateRequest);
 
+    EventFullDto findEvent(Long id);
 
+    Collection<ParticipationRequestDto> findEventRequests(Long userId, Long eventId);
 }

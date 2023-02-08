@@ -13,4 +13,7 @@ public interface CategoryService {
 
     CategoryDto patchCategory(Long id, NewCategoryDto categoryDto);
 
+    void deleteCategory(Long id);
+
+    CategoryDto findCategory(Long id);
 }

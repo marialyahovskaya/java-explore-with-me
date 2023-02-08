@@ -11,4 +11,6 @@ import java.util.List;
 public interface EventRepository extends JpaRepository<Event, Long>, QuerydslPredicateExecutor<Event> {
 
     List<Event> findByInitiatorId(Long id, Pageable pageable);
+
+    Long countByCategoryId(Long id);
 }

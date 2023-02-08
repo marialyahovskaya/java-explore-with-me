@@ -4,17 +4,15 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ru.practicum.ewm.PaginationHelper;
-import ru.practicum.ewm.category.Category;
 import ru.practicum.ewm.compilation.Compilation;
 import ru.practicum.ewm.compilation.CompilationMapper;
 import ru.practicum.ewm.compilation.CompilationRepository;
 import ru.practicum.ewm.compilation.dto.CompilationDto;
 import ru.practicum.ewm.compilation.dto.NewCompilationDto;
 import ru.practicum.ewm.event.Event;
-import ru.practicum.ewm.event.EventMapper;
+import ru.practicum.ewm.event.EventRepository;
 import ru.practicum.ewm.event.service.EventService;
-import ru.practicum.ewm.user.User;
-import ru.practicum.stats.client.StatsClient;
+import ru.practicum.ewm.exception.NotFoundException;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -25,12 +23,14 @@ public class CompilationServiceImpl implements CompilationService {
 
     public final CompilationRepository compilationRepository;
 
+    public final EventRepository eventRepository;
+
     public final EventService eventService;
 
     @Override
-    public Collection<CompilationDto> findCategories(Boolean pinned, Integer from, Integer size) {
+    public Collection<CompilationDto> findCompilations(Boolean pinned, Integer from, Integer size) {
         Pageable pageable = PaginationHelper.makePageable(from, size);
-        Collection<Compilation> compilations = new ArrayList<>();
+        Collection<Compilation> compilations;
 
         if (pinned == null) {
             compilations = compilationRepository.findAll(pageable).getContent();
@@ -39,7 +39,7 @@ public class CompilationServiceImpl implements CompilationService {
         }
 
         Set<Event> events = compilations.stream()
-                .map(compilation -> compilation.getEvents())
+                .map(Compilation::getEvents)
                 .flatMap(Collection::stream)
                 .collect(Collectors.toSet());
 
@@ -50,9 +50,51 @@ public class CompilationServiceImpl implements CompilationService {
 
     @Override
     public CompilationDto addCompilation(NewCompilationDto compilationDto) {
-        Compilation compilation = CompilationMapper.toCompilation(compilationDto);
+        Collection<Event> events = eventRepository.findAllById(Arrays.asList(compilationDto.getEvents()));
+        if (compilationDto.getEvents().length != events.size()) {
+            throw new NotFoundException("At least one event not found");
+        }
+        Compilation compilation = CompilationMapper.toCompilation(compilationDto, events);
         Map<Long, Long> views = eventService.getViews(compilation.getEvents());
         return CompilationMapper.toCompilationDto(compilationRepository.save(compilation), views);
+    }
 
+    @Override
+    public void deleteCompilation(Long id) {
+        compilationRepository.findById(id).orElseThrow(() -> new NotFoundException("Compilation not found"));
+        compilationRepository.deleteById(id);
+    }
+
+    @Override
+    public CompilationDto findCompilation(Long id) {
+        Compilation compilation = compilationRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Compilation not found"));
+        Map<Long, Long> views = eventService.getViews(compilation.getEvents());
+        return CompilationMapper.toCompilationDto(compilation, views);
+    }
+
+    @Override
+    public CompilationDto patchCompilation(Long id, NewCompilationDto compilationDto) {
+        Compilation compilationToUpdate = compilationRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Compilation not found"));
+
+
+        if (compilationDto.getPinned() != null) {
+            compilationToUpdate.setPinned(compilationDto.getPinned());
+        }
+        if (compilationDto.getTitle() != null) {
+            compilationToUpdate.setTitle(compilationDto.getTitle());
+        }
+        if (compilationDto.getEvents() != null) {
+            Collection<Event> newEvents = eventRepository.findAllById(Arrays.asList(compilationDto.getEvents()));
+            if (compilationDto.getEvents().length != newEvents.size()) {
+                throw new NotFoundException("At least one event not found");
+            }
+            compilationToUpdate.setEvents(newEvents);
+        }
+
+        Map<Long, Long> views = eventService.getViews(compilationToUpdate.getEvents());
+
+        return CompilationMapper.toCompilationDto(compilationRepository.save(compilationToUpdate), views);
     }
 }

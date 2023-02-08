@@ -7,7 +7,6 @@ import ru.practicum.ewm.user.dto.UserShortDto;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
-
 public class UserMapper {
 
     public static User toUser(NewUserRequest userRequest) {

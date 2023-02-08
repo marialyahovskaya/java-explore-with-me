@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.event.dto.*;
 import ru.practicum.ewm.event.service.EventService;
+import ru.practicum.ewm.request.dto.ParticipationRequestDto;
 
 import javax.validation.Valid;
 import javax.validation.ValidationException;
@@ -28,9 +29,14 @@ public class PrivateEventController {
         return new ResponseEntity<>(eventService.findEvents(userId, from, size), HttpStatus.OK);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<EventFullDto> findEvent(@PathVariable Long id) {
+        return new ResponseEntity<>(eventService.findEvent(id), HttpStatus.OK);
+    }
+
     @PostMapping
     public ResponseEntity<EventFullDto> createEvent(@PathVariable Long userId,
-                                                       @RequestBody @Valid NewEventDto eventDto) throws ValidationException {
+                                                    @RequestBody @Valid NewEventDto eventDto) throws ValidationException {
         return new ResponseEntity<>(eventService.addEvent(userId, eventDto), HttpStatus.CREATED);
     }
 
@@ -39,7 +45,6 @@ public class PrivateEventController {
                                                    @PathVariable Long eventId,
                                                    @RequestBody UpdateEventUserRequest updateEventUserRequest) {
         return new ResponseEntity<>(eventService.patchEventByInitiator(userId, eventId, updateEventUserRequest), HttpStatus.OK);
-
     }
 
     @PatchMapping("/{eventId}/requests")
@@ -47,9 +52,11 @@ public class PrivateEventController {
                                                                               @PathVariable Long eventId,
                                                                               @RequestBody EventRequestStatusUpdateRequest statusUpdateRequest) {
         return new ResponseEntity<>(eventService.changeRequestStatus(userId, eventId, statusUpdateRequest), HttpStatus.OK);
-
     }
 
-
-
+    @GetMapping("/{eventId}/requests")
+    public ResponseEntity<Collection<ParticipationRequestDto>> findEventRequests(@PathVariable Long userId,
+                                                                                 @PathVariable Long eventId) {
+        return new ResponseEntity<>(eventService.findEventRequests(userId, eventId), HttpStatus.OK);
+    }
 }

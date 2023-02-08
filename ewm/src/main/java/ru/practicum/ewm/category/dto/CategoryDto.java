@@ -1,6 +1,5 @@
 package ru.practicum.ewm.category.dto;
 
-
 import lombok.Getter;
 import lombok.Setter;
 

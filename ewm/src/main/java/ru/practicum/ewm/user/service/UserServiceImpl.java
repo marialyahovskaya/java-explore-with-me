@@ -1,9 +1,12 @@
 package ru.practicum.ewm.user.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ru.practicum.ewm.PaginationHelper;
+import ru.practicum.ewm.exception.ConflictException;
+import ru.practicum.ewm.exception.NotFoundException;
 import ru.practicum.ewm.user.User;
 import ru.practicum.ewm.user.UserMapper;
 import ru.practicum.ewm.user.UserRepository;
@@ -12,18 +15,22 @@ import ru.practicum.ewm.user.dto.UserDto;
 
 import java.util.Collection;
 
-
 @Service
 @RequiredArgsConstructor
-public class UserServiceImpl implements UserService{
+public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
 
     @Override
     public UserDto addUser(final NewUserRequest userDto) {
-
         User user = UserMapper.toUser(userDto);
-        return UserMapper.toUserDto(userRepository.save(user));
+        UserDto newUser;
+        try {
+            newUser = UserMapper.toUserDto(userRepository.save(user));
+        } catch (DataIntegrityViolationException e) {
+            throw new ConflictException("Cannot create user");
+        }
+        return newUser;
     }
 
     @Override
@@ -36,5 +43,10 @@ public class UserServiceImpl implements UserService{
         }
     }
 
+    @Override
+    public void deleteUser(Long id) {
+        userRepository.findById(id).orElseThrow(() -> new NotFoundException("User not found"));
+        userRepository.deleteById(id);
+    }
 }
 

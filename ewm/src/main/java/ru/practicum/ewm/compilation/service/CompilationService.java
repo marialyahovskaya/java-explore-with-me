@@ -6,8 +6,13 @@ import ru.practicum.ewm.compilation.dto.NewCompilationDto;
 import java.util.Collection;
 
 public interface CompilationService {
-    Collection<CompilationDto> findCategories(Boolean pinned, Integer from, Integer size);
+    Collection<CompilationDto> findCompilations(Boolean pinned, Integer from, Integer size);
 
     CompilationDto addCompilation(NewCompilationDto compilationDto);
 
+    void deleteCompilation(Long id);
+
+    CompilationDto findCompilation(Long id);
+
+    CompilationDto patchCompilation(Long id, NewCompilationDto compilationDto);
 }

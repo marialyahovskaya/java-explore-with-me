@@ -1,6 +1,5 @@
 package ru.practicum.ewm.user.controller;
 
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,8 +19,6 @@ public class AdminUserController {
 
     private final UserService userService;
 
-
-
     @PostMapping
     public ResponseEntity<UserDto> createUser(@RequestBody @Valid NewUserRequest userDto) throws ValidationException {
         return new ResponseEntity<>(userService.addUser(userDto), HttpStatus.CREATED);
@@ -34,4 +31,9 @@ public class AdminUserController {
         return new ResponseEntity<>(userService.findUsers(ids, from, size), HttpStatus.OK);
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
+        userService.deleteUser(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 }

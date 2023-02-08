@@ -1,6 +1,5 @@
 package ru.practicum.ewm.user;
 
-
 import lombok.*;
 
 import javax.persistence.*;
