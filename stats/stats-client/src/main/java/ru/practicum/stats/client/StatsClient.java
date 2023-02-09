@@ -35,7 +35,7 @@ public class StatsClient extends BaseClient {
 
     @Autowired
     public StatsClient(@Value("${spring.application.name}") String application,
-                       @Value("${services.stats-server.uri:http://localhost:9090}") String statsServiceUri,
+                       @Value("${services.stats-server.uri:http://stats-server:9090}") String statsServiceUri,
                        ObjectMapper json,
                        RestTemplateBuilder builder) {
         super(
