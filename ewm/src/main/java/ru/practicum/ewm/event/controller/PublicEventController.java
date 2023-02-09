@@ -37,7 +37,9 @@ public class PublicEventController {
             @RequestParam(required = false)
             @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime rangeEnd,
             @RequestParam(required = false, defaultValue = "0") Integer from,
-            @RequestParam(required = false, defaultValue = "10") Integer size) {
+            @RequestParam(required = false, defaultValue = "10") Integer size,
+            HttpServletRequest request) {
+        statsClient.hit(request);
         return new ResponseEntity<>(eventService.findEvents(text, paid, onlyAvailable, sort, categories, rangeStart, rangeEnd, from, size), HttpStatus.OK);
     }
 
