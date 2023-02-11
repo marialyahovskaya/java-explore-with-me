@@ -25,16 +25,18 @@ public class CategoryServiceImpl implements CategoryService {
 
     private final EventRepository eventRepository;
 
+    private final CategoryMapper categoryMapper;
+
     @Override
     public CategoryDto addCategory(final NewCategoryDto categoryDto) {
-        Category category = CategoryMapper.toCategory(categoryDto);
+        Category category = categoryMapper.toCategory(categoryDto);
         Category createdCategory;
         try {
             createdCategory = categoryRepository.save(category);
         } catch (DataIntegrityViolationException e) {
             throw new ConflictException("Name is not unique");
         }
-        return CategoryMapper.toCategoryDto(createdCategory);
+        return categoryMapper.toCategoryDto(createdCategory);
     }
 
     @Override
@@ -42,7 +44,7 @@ public class CategoryServiceImpl implements CategoryService {
 
         Pageable pageable = PaginationHelper.makePageable(from, size);
 
-        return CategoryMapper.toCategoryDto(categoryRepository.findAll(pageable).getContent());
+        return categoryMapper.toCategoryDto(categoryRepository.findAll(pageable).getContent());
     }
 
     @Override
@@ -57,7 +59,7 @@ public class CategoryServiceImpl implements CategoryService {
         } catch (DataIntegrityViolationException e) {
             throw new ConflictException("Name is not unique");
         }
-        return CategoryMapper.toCategoryDto(updatedCategory);
+        return categoryMapper.toCategoryDto(updatedCategory);
 
     }
 
@@ -73,6 +75,6 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public CategoryDto findCategory(Long id) {
         Category category = categoryRepository.findById(id).orElseThrow(() -> new NotFoundException("Category not found"));
-        return CategoryMapper.toCategoryDto(category);
+        return categoryMapper.toCategoryDto(category);
     }
 }

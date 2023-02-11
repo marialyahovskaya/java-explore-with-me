@@ -1,40 +1,20 @@
 package ru.practicum.ewm.category;
 
+import org.mapstruct.Mapper;
 import ru.practicum.ewm.category.dto.CategoryDto;
 import ru.practicum.ewm.category.dto.NewCategoryDto;
 
 import java.util.Collection;
-import java.util.stream.Collectors;
 
-public class CategoryMapper {
+@Mapper(componentModel = "spring")
+public interface CategoryMapper {
+    Category toCategory(CategoryDto category);
 
-    public static Category toCategory(NewCategoryDto categoryDto) {
-        Category category = new Category();
-        category.setName(categoryDto.getName());
+    Category toCategory(NewCategoryDto category);
 
-        return category;
-    }
+    Collection<Category> toCategory(Collection<CategoryDto> category);
 
-    public static Category toCategory(CategoryDto categoryDto) {
-        Category category = new Category();
-        category.setName(categoryDto.getName());
-        category.setId(categoryDto.getId());
+    CategoryDto toCategoryDto(Category categories);
 
-        return category;
-    }
-
-    public static CategoryDto toCategoryDto(Category category) {
-        CategoryDto categoryDto = new CategoryDto();
-        categoryDto.setId(category.getId());
-        categoryDto.setName(category.getName());
-
-        return categoryDto;
-    }
-
-    public static Collection<CategoryDto> toCategoryDto(Collection<Category> categories) {
-        return categories.stream()
-                .map(CategoryMapper::toCategoryDto)
-                .collect(Collectors.toUnmodifiableList());
-
-    }
+    Collection<CategoryDto> toCategoryDto(Collection<Category> categories);
 }

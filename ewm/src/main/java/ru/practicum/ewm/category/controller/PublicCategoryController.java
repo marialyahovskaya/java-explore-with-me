@@ -6,7 +6,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.category.dto.CategoryDto;
 import ru.practicum.ewm.category.service.CategoryService;
-import ru.practicum.stats.client.StatsClient;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.ValidationException;
@@ -19,14 +18,11 @@ public class PublicCategoryController {
 
     private final CategoryService categoryService;
 
-    private final StatsClient statsClient;
-
     @GetMapping
     public ResponseEntity<Collection<CategoryDto>> findCategories(
             HttpServletRequest request,
             @RequestParam(required = false, defaultValue = "0") Integer from,
             @RequestParam(required = false, defaultValue = "10") Integer size) throws ValidationException {
-        statsClient.hit(request);
         return new ResponseEntity<>(categoryService.findCategories(from, size), HttpStatus.OK);
     }
 

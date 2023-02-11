@@ -10,7 +10,6 @@ import ru.practicum.ewm.event.dto.EventFullDto;
 import ru.practicum.ewm.event.dto.EventShortDto;
 import ru.practicum.ewm.event.enums.EventSort;
 import ru.practicum.ewm.event.service.EventService;
-import ru.practicum.stats.client.StatsClient;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
@@ -23,7 +22,6 @@ import java.util.Collection;
 public class PublicEventController {
 
     private final EventService eventService;
-    private final StatsClient statsClient;
 
     @GetMapping
     public ResponseEntity<Collection<EventShortDto>> findEvents(
@@ -39,13 +37,11 @@ public class PublicEventController {
             @RequestParam(required = false, defaultValue = "0") Integer from,
             @RequestParam(required = false, defaultValue = "10") Integer size,
             HttpServletRequest request) {
-        statsClient.hit(request);
         return new ResponseEntity<>(eventService.findEvents(text, paid, onlyAvailable, sort, categories, rangeStart, rangeEnd, from, size), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<EventFullDto> findEvent(@PathVariable Long id, HttpServletRequest request) {
-        statsClient.hit(request);
         return new ResponseEntity<>(eventService.findEvent(id), HttpStatus.OK);
     }
 }
