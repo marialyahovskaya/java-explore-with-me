@@ -1,4 +1,4 @@
-DROP TABLE if EXISTS users, categories, events, requests, compilations, compilation_event;
+DROP TABLE if EXISTS users, categories, events, requests, compilations, compilation_event, comments;
 CREATE TABLE if NOT EXISTS public.users
 (
     id int8 GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
@@ -48,4 +48,12 @@ CREATE TABLE if NOT EXISTS public.compilation_event
     compilation_id int8 NOT NULL,
     event_id int8 NOT NULL,
     CONSTRAINT compilation_event_pk PRIMARY KEY (compilation_id, event_id)
+);
+CREATE TABLE if NOT EXISTS public.comments
+(
+    id int8 GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    text varchar NOT NULL,
+    author_id int8 NOT NULL,
+    event_id int8 NOT NULL,
+    created_on timestamp without time zone NOT NULL
 );
