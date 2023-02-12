@@ -15,6 +15,8 @@ import ru.practicum.ewm.exception.NotFoundException;
 import ru.practicum.ewm.user.User;
 import ru.practicum.ewm.user.UserRepository;
 
+import java.util.Objects;
+
 @Service
 @RequiredArgsConstructor
 public class CommentServiceImpl implements CommentService {
@@ -46,7 +48,7 @@ public class CommentServiceImpl implements CommentService {
                 .orElseThrow(() -> new NotFoundException("User not found"));
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new NotFoundException("Comment not found"));
-        if (comment.getAuthor().getId() != userId) {
+        if (!Objects.equals(comment.getAuthor().getId(), userId)) {
             throw new NotFoundException("Comment not found");
         }
         commentRepository.delete(comment);
@@ -65,7 +67,7 @@ public class CommentServiceImpl implements CommentService {
                 .orElseThrow(() -> new NotFoundException("User not found"));
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new NotFoundException("Comment not found"));
-        if (comment.getAuthor().getId() != userId) {
+        if (!Objects.equals(comment.getAuthor().getId(), userId)) {
             throw new NotFoundException("Comment not found");
         }
         comment.setText(commentDto.getText());
