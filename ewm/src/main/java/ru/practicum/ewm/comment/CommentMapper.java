@@ -1,6 +1,7 @@
 package ru.practicum.ewm.comment;
 
-import ru.practicum.ewm.comment.dto.CommentDto;
+import ru.practicum.ewm.comment.dto.CommentFullDto;
+import ru.practicum.ewm.comment.dto.CommentShortDto;
 import ru.practicum.ewm.comment.dto.NewCommentDto;
 import ru.practicum.ewm.event.Event;
 import ru.practicum.ewm.user.User;
@@ -21,22 +22,36 @@ public class CommentMapper {
         return comment;
     }
 
-    public static CommentDto toCommentDto(Comment comment) {
+    public static CommentShortDto toCommentShortDto(Comment comment) {
+        CommentShortDto commentShortDto = new CommentShortDto();
+        commentShortDto.setId(comment.getId());
+        commentShortDto.setAuthor(UserMapper.toUserDto(comment.getAuthor()));
+        commentShortDto.setText(comment.getText());
+        commentShortDto.setCreatedOn(comment.getCreatedOn());
 
-        CommentDto commentDto = new CommentDto();
-        commentDto.setId(comment.getId());
-        commentDto.setAuthor(UserMapper.toUserDto(comment.getAuthor()));
-        commentDto.setText(comment.getText());
-        commentDto.setCreatedOn(comment.getCreatedOn());
-
-        return commentDto;
+        return commentShortDto;
     }
 
-    public static Collection<CommentDto> toCommentDto(Collection<Comment> comments) {
+    public static Collection<CommentShortDto> toCommentShortDto(Collection<Comment> comments) {
         return comments.stream()
-                .map(CommentMapper::toCommentDto)
+                .map(CommentMapper::toCommentShortDto)
                 .collect(Collectors.toUnmodifiableList());
     }
 
+    public static CommentFullDto toCommentFullDto(Comment comment) {
+        CommentFullDto commentFullDto = new CommentFullDto();
+        commentFullDto.setId(comment.getId());
+        commentFullDto.setAuthor(UserMapper.toUserDto(comment.getAuthor()));
+        commentFullDto.setText(comment.getText());
+        commentFullDto.setCreatedOn(comment.getCreatedOn());
+        commentFullDto.setEventId(comment.getEvent().getId());
 
+        return commentFullDto;
+    }
+
+    public static Collection<CommentFullDto> toCommentFullDto(Collection<Comment> comments) {
+        return comments.stream()
+                .map(CommentMapper::toCommentFullDto)
+                .collect(Collectors.toUnmodifiableList());
+    }
 }

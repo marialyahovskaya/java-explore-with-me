@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.Setter;
 import ru.practicum.ewm.category.dto.CategoryDto;
-import ru.practicum.ewm.comment.dto.CommentDto;
+import ru.practicum.ewm.comment.dto.CommentShortDto;
 import ru.practicum.ewm.event.Location;
 import ru.practicum.ewm.event.enums.EventState;
 import ru.practicum.ewm.user.dto.UserShortDto;
@@ -38,5 +38,5 @@ public class EventFullDto {
     private String title;
     private Long views;
 
-    private Collection<CommentDto> comments;
+    private Collection<CommentShortDto> comments;
 }

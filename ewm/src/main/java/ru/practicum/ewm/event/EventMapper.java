@@ -59,7 +59,7 @@ public class EventMapper {
         if (event.getComments() == null) {
             eventDto.setComments(new ArrayList<>());
         } else {
-            eventDto.setComments(CommentMapper.toCommentDto(event.getComments()));
+            eventDto.setComments(CommentMapper.toCommentShortDto(event.getComments()));
         }
         return eventDto;
     }
