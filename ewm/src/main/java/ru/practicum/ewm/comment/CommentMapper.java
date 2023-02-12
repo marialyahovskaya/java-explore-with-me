@@ -6,6 +6,9 @@ import ru.practicum.ewm.event.Event;
 import ru.practicum.ewm.user.User;
 import ru.practicum.ewm.user.UserMapper;
 
+import java.util.Collection;
+import java.util.stream.Collectors;
+
 
 public class CommentMapper {
 
@@ -29,11 +32,11 @@ public class CommentMapper {
         return commentDto;
     }
 
-//    Category toCategory(NewCategoryDto category);
-//
-//    Collection<Category> toCategory(Collection<CategoryDto> category);
-//
-//    CategoryDto toCategoryDto(Category categories);
-//
-//    Collection<CategoryDto> toCategoryDto(Collection<Category> categories);
+    public static Collection<CommentDto> toCommentDto(Collection<Comment> comments) {
+        return comments.stream()
+                .map(CommentMapper::toCommentDto)
+                .collect(Collectors.toUnmodifiableList());
+    }
+
+
 }
