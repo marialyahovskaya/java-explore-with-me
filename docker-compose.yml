@@ -11,6 +11,7 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://stats-db:5432/stats
       - SPRING_DATASOURCE_USERNAME=stats
       - SPRING_DATASOURCE_PASSWORD=stats
+    restart: on-failure
 
   stats-db:
     image: postgres:14-alpine
@@ -21,6 +22,9 @@ services:
       - POSTGRES_DB=stats
       - POSTGRES_USER=stats
       - POSTGRES_PASSWORD=stats
+    volumes:
+      - stats-db:/var/lib/postgresql/data
+    restart: on-failure
 
   ewm-service:
     build: ./ewm
@@ -35,6 +39,7 @@ services:
       - SPRING_DATASOURCE_USERNAME=ewm
       - SPRING_DATASOURCE_PASSWORD=ewm
       - STATS_HOST=stats-server
+    restart: on-failure
 
   ewm-db:
     image: postgres:14-alpine
@@ -45,3 +50,10 @@ services:
       - POSTGRES_DB=ewm
       - POSTGRES_USER=ewm
       - POSTGRES_PASSWORD=ewm
+    volumes:
+      - ewm-db:/var/lib/postgresql/data
+    restart: on-failure
+
+volumes:
+  stats-db:
+  ewm-db:
