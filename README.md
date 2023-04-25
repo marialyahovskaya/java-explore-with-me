@@ -1,3 +1,4 @@
-# java-explore-with-me
-ExploreWithMe project.
-https://github.com/marialyahovskaya/java-explore-with-me/pull/3
+# Explore With Me
+Приложение для дружеских встреч и других мероприятий. Позволяет делиться информацией об интересных событиях и находить компанию для участия в них.
+
+REST-сервисы с использованием Java 8, Spring Boot, Lombok, взаимодействие с БД (PostgreSQL) с помощью JPA-репозиториев, Docker, Docker Compose. Автотесты в Postman.
